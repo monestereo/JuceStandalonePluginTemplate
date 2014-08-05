@@ -1,0 +1,35 @@
+#!/bin/bash
+
+UTILITY_URL="https://developer.apple.com/library/ios/samplecode/CoreAudioUtilityClasses/CoreAudioUtilityClasses.zip"
+TMP_DIR="`dirname ${BASH_SOURCE[0]}`/tmp"
+ABS_PATH_TO_XCODE="/Applications/Xcode.app/Contents/Developer/Extras/CoreAudio"
+
+if [[ -d "$ABS_PATH_TO_XCODE" ]]; then
+	echo "Seams you already got the CoreAudio Utility Classes"
+	echo "exiting"
+	exit 1
+fi
+
+if [[ ! -d "$TMP_DIR" ]]; then
+	mkdir "$TMP_DIR"
+fi
+
+if [[ -f "$TMP_DIR/CoreAudioUtilityClasses.zip" ]]; then
+	rm -f "$TMP_DIR/CoreAudioUtilityClasses.zip";
+fi
+
+echo "### Downloading CoreAudio Utility Classes ###"
+
+`curl -# -C - -o "$TMP_DIR/CoreAudioUtilityClasses.zip" "$UTILITY_URL"`
+
+echo "### Unzipping ###"
+
+unzip -q "$TMP_DIR/CoreAudioUtilityClasses.zip" -d "$TMP_DIR/../../External"
+rm -rf "$TMP_DIR"
+
+echo "### Linking to Xcode ###"
+
+ABS_PATH_TO_CLASSES="$(perl -e 'use Cwd "abs_path";print abs_path(shift)' $TMP_DIR/../../External/CoreAudioUtilityClasses/CoreAudio)"
+
+echo "### please provide password ###"
+sudo ln -S "$ABS_PATH_TO_XCODE" "$ABS_PATH_TO_CLASSES"
