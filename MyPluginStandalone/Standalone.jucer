@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="pHbqSh" name="MyPlugin_Standalone" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="com.yourcompany.MyPluginstandalone" includeBinaryInAppConfig="1"
+              jucerVersion="3.1.0" defines="STANDALONE_WRAPPER">
+  <MAINGROUP id="ITwwPL" name="MyPlugin_Standalone">
+    <GROUP id="{FE0A83ED-9EC8-BB05-4E13-5D6AAD3F68DA}" name="Source_Plugin">
+      <FILE id="fQCVHC" name="PluginEditor.cpp" compile="1" resource="0"
+            file="../MyPlugin/Source/PluginEditor.cpp"/>
+      <FILE id="fIGJb9" name="PluginEditor.h" compile="0" resource="0" file="../MyPlugin/Source/PluginEditor.h"/>
+      <FILE id="aZB7l3" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="../MyPlugin/Source/PluginProcessor.cpp"/>
+      <FILE id="meg8Fz" name="PluginProcessor.h" compile="0" resource="0"
+            file="../MyPlugin/Source/PluginProcessor.h"/>
+    </GROUP>
+    <GROUP id="{FDB9C1C0-E057-338E-006B-F4E4985CE935}" name="Source">
+      <FILE id="n6Fv34" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="fWVGoz" name="juce_StandaloneFilterWindow.h" compile="0"
+            resource="0" file="Source/juce_StandaloneFilterWindow.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="../Builds/Standalone/MacOSX" extraCompilerFlags="-Wall"
+               extraDefs="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="10.4 SDK" osxArchitecture="default"
+                       isDebug="1" optimisation="1" targetName="MyPlugin_Debug"/>
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="0" optimisation="2" targetName="MyPlugin"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../JUCE/modules"/>
+        <MODULEPATH id="dRowAudio" path="../additional_modules/drowaudio"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="dRowAudio" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS DROWAUDIO_USE_CURL="disabled"/>
+</JUCERPROJECT>
