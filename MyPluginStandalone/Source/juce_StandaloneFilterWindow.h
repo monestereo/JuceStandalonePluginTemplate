@@ -1,5 +1,8 @@
 /*
- ==============================================================================
+I am not the Author of this code:
+This File is borrowed from: https://github.com/klangfreund/LUFSMeter
+
+==============================================================================
  
  This file is part of the JUCE library - "Jules' Utility Class Extensions"
  Copyright 2004-11 by Raw Material Software Ltd.

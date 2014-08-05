@@ -5,6 +5,9 @@
  
  It contains the basic startup code for a Juce application.
  
+ I am not the Author of this code:
+ This File is borrowed from: https://github.com/klangfreund/LUFSMeter
+ 
  ==============================================================================
  */
 
