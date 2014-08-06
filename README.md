@@ -27,7 +27,7 @@ Building the Standalone Version
 -----
 Testing your plugin in a DAW is possible but not really fast, as you have to restart your DAW after every change.
 
-For this, you can develop your plugin in the Standalone environment, which shares the source code with the plugin.
+For this, you can develop your plugin in the standalone environment, which shares the source code with the plugin.
 
 To build, simply open the `MyPluginStandalone/Standalone.jucer` file in the Introjucer.
 
@@ -39,4 +39,4 @@ Building the Plugins
 Open the `MyPlugin/Plugin.jucer` file in the Introjucer.
 From there, start XCode and run your build.
 
-thats it... your plugins will be moved to the standard plugin-locations.
+That's it... your plugins will be moved to the standard plugin-locations.

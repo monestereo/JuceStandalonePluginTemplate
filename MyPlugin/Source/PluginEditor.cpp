@@ -96,7 +96,7 @@ void MyPluginPluginEditor::timerCallback()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="MyPluginPluginEditor" componentName=""
-                 parentClasses="public AudioProcessorEditor, public Timer, public ButtonListener"
+                 parentClasses="public AudioProcessorEditor, public Timer"
                  constructorParams="MyPluginAudioProcessor* ownerFilter" variableInitialisers="AudioProcessorEditor(ownerFilter)"
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="0" initialWidth="600" initialHeight="400">
