@@ -15,7 +15,7 @@ if [[ $NEW_NAME =~ "[a-z|A-Z]{3,}" ]]; then
 	exit 0	
 fi
 
-FILES_TO_RENAME="$(grep -ril 'MyPlugin' . |egrep -v "JUCE/modules|JUCE/extras|README|$(basename $0)" |xargs)"
+FILES_TO_RENAME="$(grep -ril 'MyPlugin' . |egrep -v "JUCE/modules|JUCE/extras|README|External|additional_modules|$(basename $0)" |xargs)"
 
 if [ -z "$FILES_TO_RENAME" ]; then
 	echo "At the moment your can only rename your Project once"
@@ -23,6 +23,4 @@ fi
 
 sed -i '' -e "s/MyPlugin/$NEW_NAME/g" $FILES_TO_RENAME
 
-
-
-
+find . -name "*MyPlugin*" -exec rename 's/MyPlugin/myNewPluginName/' '{}' \;
