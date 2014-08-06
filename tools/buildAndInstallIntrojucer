@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TOOLS_DIR="`dirname ${BASH_SOURCE[0]}`"
+INTROJUCER_XCODE_PATH="$TOOLS_DIR/../JUCE/extras/Introjucer/Builds/MacOSX"
+INTROJUCER_XCODE="$INTROJUCER_XCODE_PATH/The Introjucer.xcodeproj"
+
+echo "### Building ###"
+
+xcodebuild -project "$INTROJUCER_XCODE" -alltargets -configuration Release | grep -A 5 error
+
+echo "### move this App to your /Application directory ###"
+
+open "$INTROJUCER_XCODE_PATH/build/Release/"
