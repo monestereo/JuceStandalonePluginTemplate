@@ -23,4 +23,4 @@ fi
 
 sed -i '' -e "s/MyPlugin/$NEW_NAME/g" $FILES_TO_RENAME
 
-find . -name "*MyPlugin*" -exec rename 's/MyPlugin/$(echo "$NEW_NAME")/' '{}' \;
+find . -name "*MyPlugin*" -exec rename "s/MyPlugin/$NEW_NAME)/" '{}' \;
