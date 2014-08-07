@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TOOLS_DIR="`dirname ${BASH_SOURCE[0]}`"
+TOOLS_DIR="$(dirname $0)"
 INTROJUCER_XCODE_PATH="$TOOLS_DIR/../JUCE/extras/Introjucer/Builds/MacOSX"
 INTROJUCER_XCODE="$INTROJUCER_XCODE_PATH/The Introjucer.xcodeproj"
 
