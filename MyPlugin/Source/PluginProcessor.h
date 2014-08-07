@@ -64,7 +64,16 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData);
     void setStateInformation (const void* data, int sizeInBytes);
+
+    enum Parameters{ExampleParam=0,	totalNumParams};
+    bool NeedsUIUpdate(){return UIUpdateFlag;};
+    void RequestUIUpdate(){UIUpdateFlag=true;};
+    void ClearUIUpdateFlag(){UIUpdateFlag=false;};
+
 private:
+    float UserParams[totalNumParams];
+        
+    bool UIUpdateFlag;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyPluginAudioProcessor)
 };

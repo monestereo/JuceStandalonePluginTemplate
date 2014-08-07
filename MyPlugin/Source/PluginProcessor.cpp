@@ -14,6 +14,8 @@
 //==============================================================================
 MyPluginAudioProcessor::MyPluginAudioProcessor()
 {
+    UserParams[ExampleParam]=0.0f; //default
+    UIUpdateFlag=true; //Request UI update
 }
 
 MyPluginAudioProcessor::~MyPluginAudioProcessor()
@@ -28,26 +30,51 @@ const String MyPluginAudioProcessor::getName() const
 
 int MyPluginAudioProcessor::getNumParameters()
 {
-    return 0;
+    return totalNumParams;
 }
 
 float MyPluginAudioProcessor::getParameter (int index)
 {
-    return 0.0f;
+    switch(index)
+    {
+        case ExampleParam://example nothing special
+            return UserParams[ExampleParam];
+        default:
+            return 0.0f;//invalid index
+    }
 }
 
 void MyPluginAudioProcessor::setParameter (int index, float newValue)
 {
+    switch(index)
+    {
+        case ExampleParam:
+            UserParams[ExampleParam]=newValue;
+            break;
+        default:
+            return;
+    }
+    UIUpdateFlag=true;//Request UI update -- Some OSX hosts use alternate editors, this updates ours
 }
 
 const String MyPluginAudioProcessor::getParameterName (int index)
 {
-    return String::empty;
+    switch(index)
+    {
+        case ExampleParam:
+            return "Example Param";
+        default:
+            return String::empty;
+    }
 }
 
-const String MyPluginAudioProcessor::getParameterText (int index)
+const String MyPluginAudioProcessor::getParameterText(int index)
 {
-    return String::empty;
+    if(index >= 0 && index < totalNumParams) {
+        return String(UserParams[index]); //return parameter value as string
+    } else {
+        return String::empty;
+    }
 }
 
 const String MyPluginAudioProcessor::getInputChannelName (int channelIndex) const
@@ -139,6 +166,7 @@ void MyPluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
+    
     for (int channel = 0; channel < getNumInputChannels(); ++channel)
     {
         float* channelData = buffer.getWritePointer(channel);
@@ -172,15 +200,28 @@ AudioProcessorEditor* MyPluginAudioProcessor::createEditor()
 //==============================================================================
 void MyPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    XmlElement root("Root");
+    XmlElement *el;
+    el = root.createNewChildElement("ExampleParam");
+    el->addTextElement(String(UserParams[ExampleParam]));
+    copyXmlToBinary(root,destData);
 }
 
 void MyPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    XmlElement* pRoot = getXmlFromBinary(data,sizeInBytes);
+    if(pRoot != NULL)
+    {
+        forEachXmlChildElement((*pRoot),pChild)
+        {
+            if(pChild->hasTagName("ExampleParam")) {
+                String text = pChild->getAllSubText();
+                setParameter(ExampleParam, text.getFloatValue());
+            }
+        }
+        delete pRoot;
+        UIUpdateFlag=true; //Request UI update
+    }
 }
 
 //==============================================================================

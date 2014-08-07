@@ -38,6 +38,7 @@ MyPluginPluginEditor::MyPluginPluginEditor (MyPluginAudioProcessor* ownerFilter)
 
 
     //[Constructor] You can add your own custom stuff here..
+    getProcessor()->RequestUIUpdate();
     startTimer(200);
     //[/Constructor]
 }
@@ -81,7 +82,7 @@ void MyPluginPluginEditor::timerCallback()
 
     // label->setText(juce::String::formatted("%f", test), juce::NotificationType::dontSendNotification);
 
-    // exchange any data you want between UI elements and the Plugin "ourProcessor"
+    ourProcessor->ClearUIUpdateFlag();
 }
 //[/MiscUserCode]
 
