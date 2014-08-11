@@ -8,7 +8,8 @@ Supported Platforms
 Currently this template was only tested on OSX Mavericks.
 This should also work on other versions of OSX.
 
-Linux (and maybe Windows) support will follow!
+Linux-Makefiles should work out of the box.
+Windows currently doensn't load the sample in standalone mode. [see issue](https://github.com/monestereo/JuceStandalonePluginTemplate/issues/1).
 
 Features
 -----
