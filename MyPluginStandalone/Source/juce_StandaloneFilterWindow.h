@@ -30,6 +30,7 @@ This File is borrowed from: https://github.com/klangfreund/LUFSMeter
 #define __JUCE_STANDALONEFILTERWINDOW_JUCEHEADER__
 
 extern AudioProcessor* JUCE_CALLTYPE createPluginFilter ();
+extern AudioProcessor* JUCE_CALLTYPE createFilePlayerProcessor ();
 
 //==============================================================================
 /**
@@ -57,7 +58,8 @@ public:
                             const Colour& backgroundColour,
                             PropertySet* settingsToUse)
     : DocumentWindow (title, backgroundColour, DocumentWindow::minimiseButton | DocumentWindow::closeButton),
-    settings (settingsToUse)
+    settings (settingsToUse),
+    graph()
     {
         // Register the StandaloneFilterWindow as ApplicationCommandTarget.
         globalCommandManager.registerAllCommandsForTarget (this);
@@ -92,32 +94,60 @@ public:
             jassertfalse    // Your filter didn't create correctly! In a standalone app that's not too great.
             JUCEApplication::quit();
         }
+
+        if (fileFilter == nullptr)
+        {
+            jassertfalse    // Your filter didn't create correctly! In a standalone app that's not too great.
+            JUCEApplication::quit();
+        }
         
-        filter->setPlayConfigDetails (JucePlugin_MaxNumInputChannels,
-                                      JucePlugin_MaxNumOutputChannels,
-                                      44100, 512);
+        graph.setPlayConfigDetails (2, 2, 44100, 512);
         
-        const File file = *new File("~/sample.wav");
+        fileFilter->setPlayConfigDetails (2, 2, 44100, 512);
+        filter->setPlayConfigDetails (2, 2, 44100, 512);
+
+        AudioProcessorGraph::AudioGraphIOProcessor* outputNode =
+        new AudioProcessorGraph::AudioGraphIOProcessor(
+                                                       AudioProcessorGraph::AudioGraphIOProcessor::audioOutputNode);
         
+        
+        AudioProcessorGraph::AudioGraphIOProcessor* inputNode =
+        new AudioProcessorGraph::AudioGraphIOProcessor(
+                                                       AudioProcessorGraph::AudioGraphIOProcessor::audioInputNode);
+
+        inputNode->setPlayConfigDetails (2, 2, 44100, 512);
+        outputNode->setPlayConfigDetails (2, 2, 44100, 512);
+        
+        AudioProcessorGraph::Node *fInputNode = graph.addNode(inputNode);
+        
+        AudioProcessorGraph::Node *filePlayerNode = graph.addNode(fileFilter);
+        AudioProcessorGraph::Node *pluginNode = graph.addNode(filter);
+        
+        AudioProcessorGraph::Node *fOutputNode = graph.addNode(outputNode);
+        
+        graph.addConnection(fInputNode->nodeId, 0, filePlayerNode->nodeId, 0);
+        graph.addConnection(fInputNode->nodeId, 1, filePlayerNode->nodeId, 1);
+        
+        graph.addConnection(filePlayerNode->nodeId, 0, pluginNode->nodeId, 0);
+        graph.addConnection(filePlayerNode->nodeId, 1, pluginNode->nodeId, 1);
+        
+        graph.addConnection(pluginNode->nodeId, 0, fOutputNode->nodeId, 0);
+        graph.addConnection(pluginNode->nodeId, 1, fOutputNode->nodeId, 1);
+
+
         deviceManager = new AudioDeviceManager();
-        deviceManager->addAudioCallback (&audioSourcePlayer);
+        deviceManager->addAudioCallback (&player);
         deviceManager->addMidiInputCallback (String::empty, &player);
-        audioSourcePlayer.setSource(&audioFilePlayer);
-        audioFilePlayer.setFile(file);
         
-        audioFilePlayer.setLooping(true);
-        
-        audioFilePlayer.start();
-        
-        player.setProcessor (filter);
+        player.setProcessor(&graph);
         
         ScopedPointer<XmlElement> savedState;
         
         if (settings != nullptr)
             savedState = settings->getXmlValue ("audioSetup");
         
-        deviceManager->initialise (filter->getNumInputChannels(),
-                                   filter->getNumOutputChannels(),
+        deviceManager->initialise (graph.getNumInputChannels(),
+                                   graph.getNumOutputChannels(),
                                    savedState,
                                    true);
         
@@ -324,6 +354,8 @@ public:
     
     void createFilter()
     {
+        AudioProcessor::setTypeOfNextNewPlugin(AudioProcessor::wrapperType_Standalone);
+        fileFilter = createFilePlayerProcessor();
         AudioProcessor::setTypeOfNextNewPlugin (AudioProcessor::wrapperType_Standalone);
         filter = createPluginFilter();
         AudioProcessor::setTypeOfNextNewPlugin (AudioProcessor::wrapperType_Undefined);
@@ -429,12 +461,12 @@ public:
 private:
     //==============================================================================
     ScopedPointer<PropertySet> settings;
-    ScopedPointer<AudioProcessor> filter;
+    AudioProcessor *filter;
+    AudioProcessor *fileFilter;
     ScopedPointer<AudioDeviceManager> deviceManager;
-    AudioSourcePlayer audioSourcePlayer;
-    drow::AudioFilePlayer audioFilePlayer;
+
     AudioProcessorPlayer player;
-    
+    AudioProcessorGraph graph;
     // The global command manager object used to dispatch command events
     ApplicationCommandManager globalCommandManager;
     
@@ -448,6 +480,9 @@ private:
             clearContentComponent();
         }
         
+        fileFilter->editorBeingDeleted(fileFilter->getActiveEditor());
+        
+        fileFilter = nullptr;
         filter = nullptr;
     }
     
