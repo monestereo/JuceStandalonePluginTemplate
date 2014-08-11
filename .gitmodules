@@ -1,6 +1,8 @@
 [submodule "JUCE"]
 	path = JUCE
 	url = https://github.com/julianstorer/JUCE.git
+	branch = master
 [submodule "additional_modules/drowaudio"]
 	path = additional_modules/drowaudio
 	url = https://github.com/drowaudio/drowaudio.git
+	branch = master
