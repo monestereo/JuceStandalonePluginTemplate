@@ -20,7 +20,6 @@ FilePlayerProcessor::FilePlayerProcessor()
     audioFilePlayer->setLooping(true);
 
     audioFilePlayer->start();
-
 }
 
 FilePlayerProcessor::~FilePlayerProcessor()
@@ -153,11 +152,6 @@ void FilePlayerProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     } else {
         buffer.clear();
     }
-    
-    for (int channel = 0; channel < getNumInputChannels(); ++channel) {
-        float* channelData = buffer.getWritePointer(channel);
-    }
-
     
     // In case we have more outputs than inputs, we'll clear any output
     // channels that didn't contain input data, (because these aren't
