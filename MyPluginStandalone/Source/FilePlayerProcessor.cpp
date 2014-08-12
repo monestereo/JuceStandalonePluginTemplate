@@ -9,6 +9,7 @@
 */
 
 #include "FilePlayerProcessor.h"
+#include "FilePlayerEditor.h"
 
 FilePlayerProcessor::FilePlayerProcessor()
 {
@@ -177,7 +178,7 @@ void FilePlayerProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 //==============================================================================
 bool FilePlayerProcessor::hasEditor() const
 {
-    return false; // (change this to false if you choose to not supply an editor)
+    return true; // (change this to false if you choose to not supply an editor)
 }
 
 //==============================================================================
@@ -190,7 +191,7 @@ void FilePlayerProcessor::setStateInformation (const void* data, int sizeInBytes
 }
 
 AudioProcessorEditor* FilePlayerProcessor::createEditor() {
-    return 0;
+    return new FilePlayerEditor(this);
 }
 
 //==============================================================================

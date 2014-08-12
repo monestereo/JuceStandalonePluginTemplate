@@ -128,7 +128,8 @@ public:
         }
         
         setContentOwned (filter->createEditorIfNeeded(), true);
-        
+        setContentOwned (fileFilter->createEditorIfNeeded(), true);
+
         if (settings != nullptr)
         {
             const int x = settings->getIntValue ("windowX", -100);
@@ -478,7 +479,14 @@ private:
             clearContentComponent();
         }
         
-        fileFilter->editorBeingDeleted(fileFilter->getActiveEditor());
+        if (fileFilter != nullptr && getContentComponent() != nullptr)
+        {
+            filter->editorBeingDeleted (dynamic_cast <AudioProcessorEditor*> (getContentComponent()));
+            clearContentComponent();
+        }
+
+        
+//        fileFilter->editorBeingDeleted(fileFilter->getActiveEditor());
         
         fileFilter = nullptr;
         filter = nullptr;
