@@ -65,6 +65,9 @@ public:
 private:
     //==============================================================================
     drow::AudioFilePlayer *audioFilePlayer;
+    
+    void initPlayer();
+    void removePlayer();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilePlayerProcessor)
     
 };

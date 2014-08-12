@@ -100,40 +100,6 @@ public:
             JUCEApplication::quit();
         }
         
-        graph.setPlayConfigDetails (2, 2, 44100, 512);
-        
-        fileFilter->setPlayConfigDetails (2, 2, 44100, 512);
-        filter->setPlayConfigDetails (2, 2, 44100, 512);
-
-        AudioProcessorGraph::AudioGraphIOProcessor* outputNode =
-        new AudioProcessorGraph::AudioGraphIOProcessor(
-                                                       AudioProcessorGraph::AudioGraphIOProcessor::audioOutputNode);
-        
-        
-        AudioProcessorGraph::AudioGraphIOProcessor* inputNode =
-        new AudioProcessorGraph::AudioGraphIOProcessor(
-                                                       AudioProcessorGraph::AudioGraphIOProcessor::audioInputNode);
-
-        inputNode->setPlayConfigDetails (2, 2, 44100, 512);
-        outputNode->setPlayConfigDetails (2, 2, 44100, 512);
-        
-        AudioProcessorGraph::Node *fInputNode = graph.addNode(inputNode);
-        
-        AudioProcessorGraph::Node *filePlayerNode = graph.addNode(fileFilter);
-        AudioProcessorGraph::Node *pluginNode = graph.addNode(filter);
-        
-        AudioProcessorGraph::Node *fOutputNode = graph.addNode(outputNode);
-        
-        graph.addConnection(fInputNode->nodeId, 0, filePlayerNode->nodeId, 0);
-        graph.addConnection(fInputNode->nodeId, 1, filePlayerNode->nodeId, 1);
-        
-        graph.addConnection(filePlayerNode->nodeId, 0, pluginNode->nodeId, 0);
-        graph.addConnection(filePlayerNode->nodeId, 1, pluginNode->nodeId, 1);
-        
-        graph.addConnection(pluginNode->nodeId, 0, fOutputNode->nodeId, 0);
-        graph.addConnection(pluginNode->nodeId, 1, fOutputNode->nodeId, 1);
-
-
         deviceManager = new AudioDeviceManager();
         deviceManager->addAudioCallback (&player);
         deviceManager->addMidiInputCallback (String::empty, &player);
@@ -358,6 +324,39 @@ public:
         AudioProcessor::setTypeOfNextNewPlugin (AudioProcessor::wrapperType_Standalone);
         filter = createPluginFilter();
         AudioProcessor::setTypeOfNextNewPlugin (AudioProcessor::wrapperType_Undefined);
+        
+        graph.setPlayConfigDetails (2, 2, 44100, 512);
+        
+        fileFilter->setPlayConfigDetails (2, 2, 44100, 512);
+        filter->setPlayConfigDetails (2, 2, 44100, 512);
+        
+        AudioProcessorGraph::AudioGraphIOProcessor* outputNode =
+        new AudioProcessorGraph::AudioGraphIOProcessor(
+                                                       AudioProcessorGraph::AudioGraphIOProcessor::audioOutputNode);
+        
+        
+        AudioProcessorGraph::AudioGraphIOProcessor* inputNode =
+        new AudioProcessorGraph::AudioGraphIOProcessor(
+                                                       AudioProcessorGraph::AudioGraphIOProcessor::audioInputNode);
+        
+        inputNode->setPlayConfigDetails (2, 2, 44100, 512);
+        outputNode->setPlayConfigDetails (2, 2, 44100, 512);
+        
+        AudioProcessorGraph::Node *fInputNode = graph.addNode(inputNode);
+        
+        AudioProcessorGraph::Node *filePlayerNode = graph.addNode(fileFilter);
+        AudioProcessorGraph::Node *pluginNode = graph.addNode(filter);
+        
+        AudioProcessorGraph::Node *fOutputNode = graph.addNode(outputNode);
+        
+        graph.addConnection(fInputNode->nodeId, 0, filePlayerNode->nodeId, 0);
+        graph.addConnection(fInputNode->nodeId, 1, filePlayerNode->nodeId, 1);
+        
+        graph.addConnection(filePlayerNode->nodeId, 0, pluginNode->nodeId, 0);
+        graph.addConnection(filePlayerNode->nodeId, 1, pluginNode->nodeId, 1);
+        
+        graph.addConnection(pluginNode->nodeId, 0, fOutputNode->nodeId, 0);
+        graph.addConnection(pluginNode->nodeId, 1, fOutputNode->nodeId, 1);
     }
     
     /** Deletes and re-creates the filter and its UI. */
@@ -428,10 +427,10 @@ public:
     {
         DialogWindow::LaunchOptions o;
         o.content.setOwned (new AudioDeviceSelectorComponent (*deviceManager,
-                                                              filter->getNumInputChannels(),
-                                                              filter->getNumInputChannels(),
-                                                              filter->getNumOutputChannels(),
-                                                              filter->getNumOutputChannels(),
+                                                              graph.getNumInputChannels(),
+                                                              graph.getNumInputChannels(),
+                                                              graph.getNumOutputChannels(),
+                                                              graph.getNumOutputChannels(),
                                                               true, false, true, false));
         o.content->setSize (500, 450);
         

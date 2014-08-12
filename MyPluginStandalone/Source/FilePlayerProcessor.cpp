@@ -13,17 +13,12 @@
 FilePlayerProcessor::FilePlayerProcessor()
 {
     audioFilePlayer = new drow::AudioFilePlayer();
-    
-    File audioFile ("~/sample.wav");
-    
-    audioFilePlayer->setFile( audioFile );
-    audioFilePlayer->setLooping(true);
-
-    audioFilePlayer->start();
 }
 
 FilePlayerProcessor::~FilePlayerProcessor()
 {
+    audioFilePlayer->releaseResources();
+    delete audioFilePlayer;
 }
 
 //==============================================================================
@@ -130,15 +125,31 @@ void FilePlayerProcessor::changeProgramName (int index, const String& newName)
 //==============================================================================
 void FilePlayerProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    initPlayer();
     audioFilePlayer->prepareToPlay(samplesPerBlock, sampleRate);
+
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
 
+void FilePlayerProcessor::initPlayer() {
+    File audioFile ("~/sample.wav");
+        
+    audioFilePlayer->setFile( audioFile );
+    audioFilePlayer->setLooping(true);
+    
+    audioFilePlayer->start();
+}
+
+void FilePlayerProcessor::removePlayer() {
+    if (audioFilePlayer != nullptr) {
+        audioFilePlayer->stop();
+    }
+}
+
 void FilePlayerProcessor::releaseResources()
 {
-    audioFilePlayer->stop();
-    delete audioFilePlayer;
+    audioFilePlayer->releaseResources();
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
