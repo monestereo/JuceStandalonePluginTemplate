@@ -33,6 +33,8 @@ public:
     const String getName() const;
     
     int getNumParameters();
+
+    enum Parameters{Bypass=0, totalNumParams};
     
     float getParameter (int index);
     void setParameter (int index, float newValue);
@@ -45,6 +47,9 @@ public:
     bool isInputChannelStereoPair (int index) const;
     bool isOutputChannelStereoPair (int index) const;
     
+    void setBypassed(bool bypassed);
+    bool getBypassed();
+
     bool acceptsMidi() const;
     bool producesMidi() const;
     bool silenceInProducesSilenceOut() const;
@@ -60,12 +65,14 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData);
     void setStateInformation (const void* data, int sizeInBytes);
-    
+
     AudioProcessorEditor* createEditor();
+
 private:
     //==============================================================================
     drow::AudioFilePlayer *audioFilePlayer;
-    
+    float UserParams[totalNumParams];
+
     void initPlayer();
     void removePlayer();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilePlayerProcessor)

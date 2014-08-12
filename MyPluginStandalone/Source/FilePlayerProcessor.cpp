@@ -13,6 +13,7 @@
 FilePlayerProcessor::FilePlayerProcessor()
 {
     audioFilePlayer = new drow::AudioFilePlayer();
+    UserParams[Bypass] = 0.0f;
 }
 
 FilePlayerProcessor::~FilePlayerProcessor()
@@ -29,27 +30,55 @@ const String FilePlayerProcessor::getName() const
 
 int FilePlayerProcessor::getNumParameters()
 {
-    return 0;
+    return 1;
 }
 
 float FilePlayerProcessor::getParameter (int index)
 {
-    return 0.0f;//invalid index
+    switch (index) {
+        case Bypass:
+            return UserParams[Bypass];
+        default:
+            return 0.0f;
+    }
 }
 
 void FilePlayerProcessor::setParameter (int index, float newValue)
 {
-    return;
+    switch (index) {
+        case Bypass:
+
+            UserParams[Bypass] = newValue;
+            if (UserParams[Bypass] == 0.0f) {
+                audioFilePlayer->start();
+            } else {
+                audioFilePlayer->stop();
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 const String FilePlayerProcessor::getParameterName (int index)
 {
-    return String::empty;
+    switch (index) {
+        case Bypass:
+            return "Bypass";
+        default:
+            return String::empty;
+    }
 }
 
 const String FilePlayerProcessor::getParameterText(int index)
 {
-    return String::empty;}
+    switch (index) {
+        case Bypass:
+            return String::formatted("%f", UserParams[Bypass]);
+        default:
+            return String::empty;
+    }
+}
 
 const String FilePlayerProcessor::getInputChannelName (int channelIndex) const
 {
@@ -156,14 +185,16 @@ void FilePlayerProcessor::releaseResources()
 
 void FilePlayerProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    AudioSourceChannelInfo channelInfo(buffer);
-    //printf("%f\n", audioFilePlayer->getCurrentPosition());
-    if (audioFilePlayer->isPlaying()) {
-        audioFilePlayer->getNextAudioBlock(channelInfo);
-    } else {
-        buffer.clear();
+    if (UserParams[Bypass] == 0.0f) {
+        
+        AudioSourceChannelInfo channelInfo(buffer);
+        if (audioFilePlayer->isPlaying()) {
+            audioFilePlayer->getNextAudioBlock(channelInfo);
+        } else {
+            buffer.clear();
+        }
+        
     }
-    
     // In case we have more outputs than inputs, we'll clear any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).

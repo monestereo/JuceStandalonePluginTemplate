@@ -28,6 +28,8 @@ Some Code of this File is borrowed from: https://github.com/klangfreund/LUFSMete
 #ifndef __JUCE_STANDALONEFILTERWINDOW_JUCEHEADER__
 #define __JUCE_STANDALONEFILTERWINDOW_JUCEHEADER__
 
+#include "FilePlayerProcessor.h"
+
 extern AudioProcessor* JUCE_CALLTYPE createPluginFilter ();
 extern AudioProcessor* JUCE_CALLTYPE createFilePlayerProcessor ();
 
@@ -99,6 +101,10 @@ public:
             jassertfalse    // Your filter didn't create correctly! In a standalone app that's not too great.
             JUCEApplication::quit();
         }
+        
+        
+        // set Bypass on the Sample loop
+        fileFilter->setParameter(FilePlayerProcessor::Bypass, 0.0f);
         
         deviceManager = new AudioDeviceManager();
         deviceManager->addAudioCallback (&player);
