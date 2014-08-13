@@ -13,7 +13,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class FilePlayerProcessor  : public AudioProcessor
+class FilePlayerProcessor  : public AudioProcessor, public drow::AudioFilePlayer::Listener
 {
 public:
     //==============================================================================
@@ -42,6 +42,10 @@ public:
     const String getParameterName (int index);
     const String getParameterText (int index);
     
+    void togglePlayState();
+    void setLoop(bool status);
+    void setFile(const File &file);
+
     const String getInputChannelName (int channelIndex) const;
     const String getOutputChannelName (int channelIndex) const;
     bool isInputChannelStereoPair (int index) const;
@@ -66,6 +70,10 @@ public:
     void getStateInformation (MemoryBlock& destData);
     void setStateInformation (const void* data, int sizeInBytes);
 
+    //==============================================================================
+    void fileChanged (drow::AudioFilePlayer* player);
+    void playerStoppedOrStarted (drow::AudioFilePlayer* player);
+    
     AudioProcessorEditor* createEditor();
 
 private:
@@ -74,7 +82,10 @@ private:
     float UserParams[totalNumParams];
 
     void initPlayer();
+
     void removePlayer();
+    bool playNonLoop = false;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilePlayerProcessor)
     
 };

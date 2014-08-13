@@ -9,11 +9,14 @@
 */
 
 #include "FilePlayerProcessor.h"
+#include "FilePlayerEditor.h"
 
 FilePlayerProcessor::FilePlayerProcessor()
 {
     audioFilePlayer = new drow::AudioFilePlayer();
     UserParams[Bypass] = 0.0f;
+    
+    audioFilePlayer->addListener(this);
 }
 
 FilePlayerProcessor::~FilePlayerProcessor()
@@ -78,6 +81,8 @@ const String FilePlayerProcessor::getParameterText(int index)
         default:
             return String::empty;
     }
+
+    return String::empty;
 }
 
 const String FilePlayerProcessor::getInputChannelName (int channelIndex) const
@@ -154,20 +159,9 @@ void FilePlayerProcessor::changeProgramName (int index, const String& newName)
 //==============================================================================
 void FilePlayerProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    initPlayer();
     audioFilePlayer->prepareToPlay(samplesPerBlock, sampleRate);
-
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-}
-
-void FilePlayerProcessor::initPlayer() {
-    File audioFile ("~/sample.wav");
-        
-    audioFilePlayer->setFile( audioFile );
-    audioFilePlayer->setLooping(true);
-    
-    audioFilePlayer->start();
 }
 
 void FilePlayerProcessor::removePlayer() {
@@ -182,6 +176,39 @@ void FilePlayerProcessor::releaseResources()
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
+
+void FilePlayerProcessor::togglePlayState() {
+    if (audioFilePlayer->isPlaying() == true) {
+        audioFilePlayer->stop();
+    } else {
+        audioFilePlayer->startFromZero();
+    }
+}
+
+void FilePlayerProcessor::setFile(const File &file) {
+    audioFilePlayer->setFile( file );
+}
+
+
+void FilePlayerProcessor::setLoop(bool status) {
+    bool playerWasPlaying = audioFilePlayer->isPlaying();
+    audioFilePlayer->setLooping(status);
+    FilePlayerEditor* editor = dynamic_cast<FilePlayerEditor*>(getActiveEditor());
+    editor->setLoopState(audioFilePlayer->isLooping());
+    if (playerWasPlaying) {
+        audioFilePlayer->startFromZero();
+    }
+}
+
+//==============================================================================
+
+void FilePlayerProcessor::fileChanged(drow::AudioFilePlayer* player) {}
+void FilePlayerProcessor::playerStoppedOrStarted (drow::AudioFilePlayer* player) {
+    FilePlayerEditor* editor = dynamic_cast<FilePlayerEditor*>(getActiveEditor());
+    
+    editor->setPlayState(player->isPlaying());
+}
+//==============================================================================
 
 void FilePlayerProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
@@ -208,7 +235,7 @@ void FilePlayerProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 //==============================================================================
 bool FilePlayerProcessor::hasEditor() const
 {
-    return false; // (change this to false if you choose to not supply an editor)
+    return true; // (change this to false if you choose to not supply an editor)
 }
 
 //==============================================================================
@@ -221,7 +248,7 @@ void FilePlayerProcessor::setStateInformation (const void* data, int sizeInBytes
 }
 
 AudioProcessorEditor* FilePlayerProcessor::createEditor() {
-    return 0;
+    return new FilePlayerEditor(this);
 }
 
 //==============================================================================

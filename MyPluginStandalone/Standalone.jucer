@@ -14,6 +14,12 @@
             file="../MyPlugin/Source/PluginProcessor.h"/>
     </GROUP>
     <GROUP id="{FDB9C1C0-E057-338E-006B-F4E4985CE935}" name="Source">
+      <FILE id="eShhji" name="TransportWindow.h" compile="0" resource="0"
+            file="Source/TransportWindow.h"/>
+      <FILE id="Imz0a3" name="FilePlayerEditor.cpp" compile="1" resource="0"
+            file="Source/FilePlayerEditor.cpp"/>
+      <FILE id="guGYNr" name="FilePlayerEditor.h" compile="0" resource="0"
+            file="Source/FilePlayerEditor.h"/>
       <FILE id="z9OgFY" name="FilePlayerProcessor.cpp" compile="1" resource="0"
             file="Source/FilePlayerProcessor.cpp"/>
       <FILE id="YFJy8N" name="FilePlayerProcessor.h" compile="0" resource="0"
