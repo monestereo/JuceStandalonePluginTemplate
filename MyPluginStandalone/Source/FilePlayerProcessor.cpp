@@ -50,13 +50,7 @@ void FilePlayerProcessor::setParameter (int index, float newValue)
 {
     switch (index) {
         case Bypass:
-
             UserParams[Bypass] = newValue;
-            if (UserParams[Bypass] == 0.0f) {
-                audioFilePlayer->start();
-            } else {
-                audioFilePlayer->stop();
-            }
             break;
         default:
             break;
@@ -194,6 +188,9 @@ void FilePlayerProcessor::setLoop(bool status) {
     bool playerWasPlaying = audioFilePlayer->isPlaying();
     audioFilePlayer->setLooping(status);
     FilePlayerEditor* editor = dynamic_cast<FilePlayerEditor*>(getActiveEditor());
+    if (editor == nullptr) {
+        return;
+    }
     editor->setLoopState(audioFilePlayer->isLooping());
     if (playerWasPlaying) {
         audioFilePlayer->startFromZero();
@@ -205,7 +202,9 @@ void FilePlayerProcessor::setLoop(bool status) {
 void FilePlayerProcessor::fileChanged(drow::AudioFilePlayer* player) {}
 void FilePlayerProcessor::playerStoppedOrStarted (drow::AudioFilePlayer* player) {
     FilePlayerEditor* editor = dynamic_cast<FilePlayerEditor*>(getActiveEditor());
-    
+    if (editor == nullptr) {
+        return;
+    }
     editor->setPlayState(player->isPlaying());
 }
 //==============================================================================

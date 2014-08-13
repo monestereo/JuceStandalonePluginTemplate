@@ -103,10 +103,6 @@ public:
             JUCEApplication::quit();
         }
         
-        
-        // set Bypass on the Sample loop
-        fileFilter->setParameter(FilePlayerProcessor::Bypass, 0.0f);
-        
         deviceManager = new AudioDeviceManager();
         deviceManager->addAudioCallback (&player);
         deviceManager->addMidiInputCallback (String::empty, &player);

@@ -45,6 +45,9 @@ FilePlayerEditor::FilePlayerEditor (FilePlayerProcessor* ownerFilter)
     load_sample->setColour (TextButton::buttonColourId, Colours::white);
     load_sample->setColour (TextButton::buttonOnColourId, Colour (0xff909090));
 
+    addAndMakeVisible (bypass = new ToggleButton ("bypass"));
+    bypass->addListener (this);
+
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -67,6 +70,7 @@ FilePlayerEditor::~FilePlayerEditor()
     play_pause = nullptr;
     loop = nullptr;
     load_sample = nullptr;
+    bypass = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -88,8 +92,9 @@ void FilePlayerEditor::paint (Graphics& g)
 void FilePlayerEditor::resized()
 {
     play_pause->setBounds (8, 56, 184, 40);
-    loop->setBounds (16, 104, 150, 24);
+    loop->setBounds (16, 104, 80, 24);
     load_sample->setBounds (8, 8, 184, 40);
+    bypass->setBounds (104, 104, 80, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -138,6 +143,12 @@ void FilePlayerEditor::buttonClicked (Button* buttonThatWasClicked)
         }
 
         //[/UserButtonCode_load_sample]
+    }
+    else if (buttonThatWasClicked == bypass)
+    {
+        //[UserButtonCode_bypass] -- add your button handler code here..
+        filePlayerProcessor->setParameter(FilePlayerProcessor::Bypass, (buttonThatWasClicked->getToggleState()) ? 1.0f : 0.0f);
+        //[/UserButtonCode_bypass]
     }
 
     //[UserbuttonClicked_Post]
@@ -188,12 +199,15 @@ BEGIN_JUCER_METADATA
               bgColOn="ff909090" buttonText="play" connectedEdges="0" needsCallback="1"
               radioGroupId="0"/>
   <TOGGLEBUTTON name="loop" id="2a149b60e2d18533" memberName="loop" virtualName=""
-                explicitFocusOrder="0" pos="16 104 150 24" buttonText="loop"
-                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
+                explicitFocusOrder="0" pos="16 104 80 24" buttonText="loop" connectedEdges="0"
+                needsCallback="1" radioGroupId="0" state="0"/>
   <TEXTBUTTON name="load_sample" id="837c9b236ae3dc9f" memberName="load_sample"
               virtualName="" explicitFocusOrder="0" pos="8 8 184 40" bgColOff="ffffffff"
               bgColOn="ff909090" buttonText="load sample" connectedEdges="0"
               needsCallback="1" radioGroupId="0"/>
+  <TOGGLEBUTTON name="bypass" id="79d755d9c735f898" memberName="bypass" virtualName=""
+                explicitFocusOrder="0" pos="104 104 80 24" buttonText="bypass"
+                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

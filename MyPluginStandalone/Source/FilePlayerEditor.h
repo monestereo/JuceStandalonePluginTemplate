@@ -68,6 +68,7 @@ private:
     ScopedPointer<TextButton> play_pause;
     ScopedPointer<ToggleButton> loop;
     ScopedPointer<TextButton> load_sample;
+    ScopedPointer<ToggleButton> bypass;
 
 
     //==============================================================================
