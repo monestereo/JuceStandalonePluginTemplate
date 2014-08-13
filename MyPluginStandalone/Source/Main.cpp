@@ -33,7 +33,6 @@ public:
         // This method is where you should put your application's initialisation code..
         
         standaloneFilterWindow = new StandaloneFilterWindow("MyPlugin", Colours::lightgrey, nullptr);
-        // ApplicationProperties::getInstance()->setStorageParameters (T("DemoAudioPluginStandalone"), String::empty, T("DemoAudioPluginStandalone"), 400, PropertiesFile::storeAsXML);
         standaloneFilterWindow->setTitleBarButtonsRequired (DocumentWindow::allButtons, false);
         standaloneFilterWindow->setVisible (true);
         standaloneFilterWindow->setResizable (true, true);

@@ -28,6 +28,8 @@ Some Code of this File is borrowed from: https://github.com/klangfreund/LUFSMete
 #ifndef __JUCE_STANDALONEFILTERWINDOW_JUCEHEADER__
 #define __JUCE_STANDALONEFILTERWINDOW_JUCEHEADER__
 
+#include "TransportWindow.h"
+
 extern AudioProcessor* JUCE_CALLTYPE createPluginFilter ();
 extern AudioProcessor* JUCE_CALLTYPE createFilePlayerProcessor ();
 
@@ -127,8 +129,13 @@ public:
             }
         }
         
+        transportWindow = new TransportWindow("FilePlayerTransport", Colours::lightgrey);
+        transportWindow->setMenuBarComponent(NULL);
+        transportWindow->setVisible (true);
+        transportWindow->setResizable (false, false);
+        transportWindow->setContentOwned (fileFilter->createEditorIfNeeded(), true);        
         setContentOwned (filter->createEditorIfNeeded(), true);
-        setContentOwned (fileFilter->createEditorIfNeeded(), true);
+
 
         if (settings != nullptr)
         {
@@ -173,7 +180,7 @@ public:
         }
         
         deleteFilter();
-        
+                
         // because we've set the StandaloneFilterWindow to be used as our menu
         // bar model, we have to switch this off before deleting the
         // StandaloneFilterWindow.
@@ -463,7 +470,7 @@ private:
     AudioProcessor *filter;
     AudioProcessor *fileFilter;
     ScopedPointer<AudioDeviceManager> deviceManager;
-
+    ScopedPointer<TransportWindow> transportWindow;
     AudioProcessorPlayer player;
     AudioProcessorGraph graph;
     // The global command manager object used to dispatch command events
@@ -479,15 +486,12 @@ private:
             clearContentComponent();
         }
         
-        if (fileFilter != nullptr && getContentComponent() != nullptr)
+        if (fileFilter != nullptr && transportWindow->getContentComponent() != nullptr)
         {
-            filter->editorBeingDeleted (dynamic_cast <AudioProcessorEditor*> (getContentComponent()));
-            clearContentComponent();
+            fileFilter->editorBeingDeleted (dynamic_cast <AudioProcessorEditor*> (transportWindow->getContentComponent()));
+            transportWindow->clearContentComponent();
         }
 
-        
-//        fileFilter->editorBeingDeleted(fileFilter->getActiveEditor());
-        
         fileFilter = nullptr;
         filter = nullptr;
     }

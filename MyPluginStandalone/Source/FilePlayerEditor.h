@@ -36,7 +36,8 @@
                                                                     //[/Comments]
 */
 class FilePlayerEditor  : public AudioProcessorEditor,
-                          public Timer
+                          public Timer,
+                          public ButtonListener
 {
 public:
     //==============================================================================
@@ -48,10 +49,14 @@ public:
     void timerCallback();
     FilePlayerProcessor* getProcessor() const
     {return static_cast <FilePlayerProcessor*>(getAudioProcessor());}
+
+    void setPlayState(bool state);
+    void setLoopState(bool state);
     //[/UserMethods]
 
     void paint (Graphics& g);
     void resized();
+    void buttonClicked (Button* buttonThatWasClicked);
 
 
 
@@ -60,7 +65,9 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Component> component;
+    ScopedPointer<TextButton> play_pause;
+    ScopedPointer<ToggleButton> loop;
+    ScopedPointer<TextButton> load_sample;
 
 
     //==============================================================================
