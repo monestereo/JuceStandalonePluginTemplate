@@ -19,7 +19,8 @@ Features
 Getting Started
 -----
 
-1. clone this repository with submodules `git clone --recursive https://github.com/monestereo/JuceStandalonePluginTemplate`
+1. clone this repository `git clone --depth=1 https://github.com/monestereo/JuceStandalonePluginTemplate`
+2. update submodules `git submodule update --init --depth=1` 
 2. download the VST3 SDK from [Steinberg](http://www.steinberg.net/nc/en/company/developers/sdk_download_portal.html) (you need to register as a developer.. unfortunately I may not redistribute the SDK due to their restrictive license) and place it in `External/VST3SDK` (remove the whitespace)
 3. if you are on OSX, run `tools/installCoreAudioUtilityClasses` (check the source beforehand. It will ask for your system password for sym-linking to XCode. Never trust a script from the Internet)
 4. build the Introjucer with `tools/buildAndInstallIntrojucer` and move it to your `/Applications` directory
