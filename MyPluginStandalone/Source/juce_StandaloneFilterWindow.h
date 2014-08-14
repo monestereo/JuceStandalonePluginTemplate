@@ -347,9 +347,18 @@ public:
         AudioProcessorGraph::AudioGraphIOProcessor* inputNode =
         new AudioProcessorGraph::AudioGraphIOProcessor(
                                                        AudioProcessorGraph::AudioGraphIOProcessor::audioInputNode);
+
+        
+        AudioProcessorGraph::AudioGraphIOProcessor* midiInputNode =
+        new AudioProcessorGraph::AudioGraphIOProcessor(
+                                                       AudioProcessorGraph::AudioGraphIOProcessor::midiInputNode);
+
         
         inputNode->setPlayConfigDetails (2, 2, 44100, 512);
         outputNode->setPlayConfigDetails (2, 2, 44100, 512);
+        midiInputNode->setPlayConfigDetails (2, 2, 44100, 512);
+        
+        AudioProcessorGraph::Node *mInputNode = graph.addNode(midiInputNode);
         
         AudioProcessorGraph::Node *fInputNode = graph.addNode(inputNode);
         
@@ -357,6 +366,7 @@ public:
         AudioProcessorGraph::Node *pluginNode = graph.addNode(filter);
         
         AudioProcessorGraph::Node *fOutputNode = graph.addNode(outputNode);
+        
         
         graph.addConnection(fInputNode->nodeId, 0, filePlayerNode->nodeId, 0);
         graph.addConnection(fInputNode->nodeId, 1, filePlayerNode->nodeId, 1);
@@ -366,6 +376,8 @@ public:
         
         graph.addConnection(pluginNode->nodeId, 0, fOutputNode->nodeId, 0);
         graph.addConnection(pluginNode->nodeId, 1, fOutputNode->nodeId, 1);
+        
+        graph.addConnection(mInputNode->nodeId, graph.midiChannelIndex, pluginNode->nodeId, graph.midiChannelIndex);
     }
     
     /** Deletes and re-creates the filter and its UI. */
